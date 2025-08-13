@@ -11,7 +11,7 @@ public class BurgerStore extends Application {
         BurgerStoreController controller = new BurgerStoreController(model);
         BurgerStoreView view = new BurgerStoreView(controller, model, primaryStage);
 
-        Scene scene = new Scene(view.asParent(), 600, 300);
+        Scene scene = new Scene(view.asParent(), 300, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
