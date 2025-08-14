@@ -17,6 +17,10 @@ public class BurgerStore extends Application {
     }
 
     public static void main(String[] args) {
+        Staff john = new Manager("password", "1234567", "John");
+        StaffManagement.staffMap.put(john.getStaffID(), john);
+        Staff carl = new Staff("password", "1234567", "Carl");
+        StaffManagement.staffMap.put(carl.getStaffID(), carl);
         launch(args);
     }
 }

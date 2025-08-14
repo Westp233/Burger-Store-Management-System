@@ -45,13 +45,15 @@ public class BurgerStoreView {
     }
 
     private void createAndLayoutControls() { // The Hompage of the System
+        view.getChildren().clear();
+
         welcomLabel = new Label("Welcome to Rim Burger!!!");
 
         startBtn = new Button("Start Ordering");
         startBtn.setOnAction(event -> createOrderMenu());
 
         staffLoginBtn = new Button("Staff Login");
-        startBtn.setOnAction(event -> createLoginMenu());
+        staffLoginBtn.setOnAction(event -> createLoginMenu());
 
         view.getChildren().addAll(welcomLabel, startBtn, staffLoginBtn);
     }
@@ -72,23 +74,32 @@ public class BurgerStoreView {
 
         TextField idField = new TextField();
         HBox idRow = new HBox(5, new Label("StaffID: "), idField);
+        idRow.setAlignment(Pos.CENTER);
 
         TextField passWordField = new TextField();
         HBox passWordRow = new HBox(5, new Label("Password: "), passWordField);
+        passWordRow.setAlignment(Pos.CENTER);
 
         loginBtn = new Button("Login");
-        // Staff staff = model.staffLogin(idField.getText().trim(), passWordField.getText().trim());
-        // loginBtn.setOnAction(event -> {
-        //     if (!staff == null) {
-        //         if (staff.getManagerPermission()) {
-        //             createManagerMenu();
-        //         } else {
-        //             createStaffMenu();
-        //         }
-        //     } else {
-        //         createErrorPage();
-        //     }
-        // });
+        loginBtn.setOnAction(event -> {
+            try { // An catcher in case the user input a string at idField
+                Staff staff = StaffManagement.login(Integer.parseInt(idField.getText().trim()),
+                        passWordField.getText().trim());
+                if (!(staff == null)) {
+                    if (staff.getManagerPermission()) { // Check if the staff is manager to decide which menu we open
+                        createManagerMenu(staff);
+                        stage.close();
+                    } else {
+                        createStaffMenu(staff);
+                        stage.close();
+                    }
+                } else {
+                    createErrorPage();// If the information provided is invalid, show a login failed window
+                }
+            } catch (NumberFormatException e) {//Ask Tutor: Can we use this??????????????
+                createErrorPage();
+            }
+        });
 
         closeBtn = new Button("Close");
         closeBtn.setOnAction(event -> stage.close());
@@ -99,21 +110,95 @@ public class BurgerStoreView {
         VBox root = new VBox(5, idRow, passWordRow, btnRow);
         root.setAlignment(Pos.CENTER);
 
-        Scene loginScene = new Scene(root, 400, 200);
+        Scene loginScene = new Scene(root, 300, 150);
 
         stage.setScene(loginScene);
         stage.show();
     }
 
-    private void createManagerMenu() {
+    private void createManagerMenu(Staff staff) { //This is the menu for the manager
+        view.getChildren().clear();
+
+        Label welcomeMessage = new Label("Welcome Back!! " + staff.getName());
+
+        Label breakLabel = new Label("");
+
+        Label message = new Label("Please Select a Option");
+
+        Button modRecipeBtn = new Button("Modify Current Recipe");
+        modRecipeBtn.setOnAction(event -> createModRecipePage());
+
+        Button modIngredientBtn = new Button("Modify Current Ingredients' Price");
+        modIngredientBtn.setOnAction(event -> createModIngredientPage());
+
+        Button manageStaffBtn = new Button("Manage Current Staff");
+        manageStaffBtn.setOnAction(event -> createManageStaffPage());
+
+        Button returnHomePg = new Button("Log Out and Return to Homepage");
+        returnHomePg.setOnAction(event -> {
+            createAndLayoutControls();
+        });
+
+        view.getChildren().addAll(welcomeMessage, breakLabel, message, modRecipeBtn, modIngredientBtn, manageStaffBtn, returnHomePg);
+        view.setAlignment(Pos.CENTER);
+    }
+
+    private void createStaffMenu(Staff staff) {
+        view.getChildren().clear();
+
+        Label welcomeMessage = new Label("Welcome Back!! " + staff.getName());
+
+        Label breakLabel = new Label("");
+
+        Label message = new Label("Please Select a Option");
+
+        Button modRecipeBtn = new Button("Modify Current Recipe");
+        modRecipeBtn.setOnAction(event -> createModRecipePage());
+
+        Button modPersonalInfo = new Button("Modify Personal Information");
+        modPersonalInfo.setOnAction(event -> createModPersonalInfoPage());
+
+        Button returnHomePg = new Button("Log Out and Return to Homepage");
+        returnHomePg.setOnAction(event -> {
+            createAndLayoutControls();
+        });
+
+        view.getChildren().addAll(welcomeMessage, breakLabel, message, modRecipeBtn, modPersonalInfo, returnHomePg);
+        view.setAlignment(Pos.CENTER);
+    }
+
+    private void createErrorPage() { // This is the pop-up window to the user if the login is failed
+        Stage stage = new Stage();
+        stage.initOwner(primaryStage);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        Label errorMessage = new Label("Login Failed, Please Check Your ID and Password");
+
+        Button closeBtn = new Button("Close");
+        closeBtn.setOnAction(event -> stage.close());
+
+        VBox root = new VBox(5, errorMessage, closeBtn);
+        root.setAlignment(Pos.CENTER);
+
+        Scene errorScene = new Scene(root, 300, 150);
+
+        stage.setScene(errorScene);
+        stage.show();
+    }
+
+    private void createModRecipePage() {
 
     }
 
-    private void createStaffMenu() {
+    private void createModIngredientPage() {
 
     }
 
-    private void createErrorPage() {
+    private void createManageStaffPage() {
+
+    }
+
+    private void createModPersonalInfoPage() {
 
     }
 }
