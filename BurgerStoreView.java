@@ -3,6 +3,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -143,7 +145,7 @@ public class BurgerStoreView {
         view.setAlignment(Pos.CENTER);
     }
 
-    private void createStaffMenu(Staff staff) {
+    private void createStaffMenu(Staff staff) { //This is the menu for the normal staff
         view.getChildren().clear();
 
         Label welcomeMessage = new Label("Welcome Back!! " + staff.getName());
@@ -187,7 +189,41 @@ public class BurgerStoreView {
     }
 
     private void createModRecipePage() {
+        Stage stage = new Stage();
+        stage.initOwner(primaryStage);
 
+        TableView<Burger> table = new TableView<>();
+
+        TableColumn<Burger, String> nameCol = new TableColumn<>();
+        TableColumn<Burger, String> ingredientCol = new TableColumn<>();
+        TableColumn<Burger, Integer> idCol = new TableColumn<>();
+
+        nameCol.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        ingredientCol.setCellValueFactory(cellData -> cellData.getValue().ingredientProperty());
+        idCol.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
+
+        table.getColumns().addAll(idCol, nameCol, ingredientCol);
+        table.setItems(model.burgerProperty());
+
+        Button removeBtn = new Button("Remove");
+        removeBtn.setOnAction(event -> {
+            int index = table.getSelectionModel().getSelectedIndex();
+            if (index != -1) {
+                this.controller.removeRecipe(index);
+            }
+        });
+
+        Button closeBtn = new Button("Close");
+        closeBtn.setOnAction(event -> stage.close());
+
+        HBox buttonRow = new HBox(5, removeBtn, closeBtn);
+
+        VBox root = new VBox(5, table, buttonRow);
+
+        Scene modRecipeScene = new Scene(root, 600, 300);
+
+        stage.setScene(modRecipeScene);
+        stage.show();
     }
 
     private void createModIngredientPage() {
