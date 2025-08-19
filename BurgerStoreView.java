@@ -11,6 +11,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+//Questions need to be clear:
+//What exactly what we need to do with the previous assignment
+//Shoule we just put it there and do nothing?
+//Or we should revise the method inside it like getter and setter in to model and controller
+//If not, am I able to use the getter and setter?
+//Can I use the method In the previous assignment?
+//Used something didn't taught in class, line108, line267
+
 public class BurgerStoreView {
     private VBox view;
     private Label welcomLabel;
@@ -87,7 +95,7 @@ public class BurgerStoreView {
             try { // An catcher in case the user input a string at idField
                 Staff staff = StaffManagement.login(Integer.parseInt(idField.getText().trim()),
                         passWordField.getText().trim());
-                if (!(staff == null)) {
+                if (!(staff == null)) {// Shoule we use get here????????
                     if (staff.getManagerPermission()) { // Check if the staff is manager to decide which menu we open
                         createManagerMenu(staff);
                         stage.close();
@@ -158,7 +166,7 @@ public class BurgerStoreView {
         modRecipeBtn.setOnAction(event -> createModRecipePage());
 
         Button modPersonalInfo = new Button("Modify Personal Information");
-        modPersonalInfo.setOnAction(event -> createModPersonalInfoPage());
+        modPersonalInfo.setOnAction(event -> createModPersonalInfoPage(staff));
 
         Button returnHomePg = new Button("Log Out and Return to Homepage");
         returnHomePg.setOnAction(event -> {
@@ -188,15 +196,15 @@ public class BurgerStoreView {
         stage.show();
     }
 
-    private void createModRecipePage() {
+    private void createModRecipePage() { //this is a table view for checking the recipe list and deleting them
         Stage stage = new Stage();
         stage.initOwner(primaryStage);
 
         TableView<Burger> table = new TableView<>();
 
-        TableColumn<Burger, String> nameCol = new TableColumn<>();
-        TableColumn<Burger, String> ingredientCol = new TableColumn<>();
-        TableColumn<Burger, Integer> idCol = new TableColumn<>();
+        TableColumn<Burger, String> nameCol = new TableColumn<>("Name");
+        TableColumn<Burger, String> ingredientCol = new TableColumn<>("Ingredients");
+        TableColumn<Burger, Integer> idCol = new TableColumn<>("ID");
 
         nameCol.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         ingredientCol.setCellValueFactory(cellData -> cellData.getValue().ingredientProperty());
@@ -227,14 +235,69 @@ public class BurgerStoreView {
     }
 
     private void createModIngredientPage() {
+        //Probably using a table view as well however ingredient are sparate into different enum, don't know if we can change the code from last assessment
+    }
+
+    private void createManageStaffPage() {  //This is the table view for checking all the staff's information and change them
+        Stage stage = new Stage();
+        stage.initOwner(primaryStage);
+
+        TableView<Staff> table = new TableView<>();
+
+        TableColumn<Staff, Integer> idCol = new TableColumn<>("ID");
+        TableColumn<Staff, String> nameCol = new TableColumn<>("Name");
+        TableColumn<Staff, String> phoneNumCol = new TableColumn<>("Phone Number");
+        TableColumn<Staff, Level> levelCol = new TableColumn<>("Acess Level"); //Another enum if thats fine
+
+        idCol.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
+        nameCol.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        phoneNumCol.setCellValueFactory(cellData -> cellData.getValue().phoneNumProperty());
+        levelCol.setCellFactory(cellData -> cellData.getValue().levelProperty());
+
+        table.getColumns().addAll(idCol, nameCol, phoneNumCol, levelCol);
+        table.setItems(model.staffProperty());
+
+        Button addStaffBtn = new Button("Add"); //Add new staff
+        addStaffBtn.setOnAction(event -> createAddStaffPage());
+
+        Button editStaffBtn = new Button("Edit"); //Modify the staff's personal information
+        editStaffBtn.setOnAction(event -> {
+            int index = table.getSelectionModel().getSelectedIndex();
+            if (index != -1) {
+                createEditStaffPage(table.getSelectionModel().getSelectedItem());
+            }
+        });
+
+        Button fireStaffBtn = new Button("Fire"); //Button for fire a staff
+        fireStaffBtn.setOnAction(event -> {
+            int index = table.getSelectionModel().getSelectedIndex();
+            if (index != -1) {
+                this.controller.removeStaff(index);
+            }
+        });
+
+        Button closeBtn = new Button("Close");
+        closeBtn.setOnAction(event -> stage.close());
+
+        HBox buttonRow = new HBox(5, addStaffBtn, editStaffBtn, fireStaffBtn, closeBtn);
+
+        VBox root = new VBox(5, table, buttonRow);
+
+        Scene modRecipeScene = new Scene(root, 600, 300);
+
+        stage.setScene(modRecipeScene);
+        stage.show();
+    }
+
+    private void createModPersonalInfoPage(Staff s) {
 
     }
 
-    private void createManageStaffPage() {
+    private void createAddStaffPage() {
 
     }
 
-    private void createModPersonalInfoPage() {
+    private void createEditStaffPage(Staff s) {
 
     }
 }
