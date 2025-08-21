@@ -11,14 +11,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-//Questions need to be clear:
-//What exactly what we need to do with the previous assignment
-//Shoule we just put it there and do nothing?
-//Or we should revise the method inside it like getter and setter in to model and controller
-//If not, am I able to use the getter and setter?
-//Can I use the method In the previous assignment?
-//Used something didn't taught in class, line108, line267
-
 public class BurgerStoreView {
     private VBox view;
     private Label welcomLabel;
@@ -106,7 +98,7 @@ public class BurgerStoreView {
                 } else {
                     createErrorPage();// If the information provided is invalid, show a login failed window
                 }
-            } catch (NumberFormatException e) {//Ask Tutor: Can we use this??????????????
+            } catch (NumberFormatException e) {
                 createErrorPage();
             }
         });
