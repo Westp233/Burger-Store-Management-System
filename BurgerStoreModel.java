@@ -183,7 +183,7 @@ class Recipe {
     private static ObservableList<Burger> burgerList; // Used map and observableList together, map for searching faster
                                                       // by using key, observableList for TableView UI
 
-    public static void initRecipe(List<Burger> burger) {
+    public static void initRecipe(List<Burger> burger) { // initialized the burger map with a list
         for (Burger b : burger) {
             burgerMap.put(b.getBurgerID(), b);
         }
@@ -335,13 +335,23 @@ class StaffManagement {
 
     private static Map<Integer, Staff> staffMap = new HashMap<>(); // Set to static for global sharing
     private static ObservableList<Staff> staffList; // Used map and observableList together, map for searching faster
-                                                     // by using key, observableList for TableView UI
+                                                    // by using key, observableList for TableView UI
 
     public static void initStaff(List<Staff> staffs) { // initialized the staff map with a list
         for (Staff s : staffs) {
             staffMap.put(s.getStaffID(), s);
         }
         staffList = FXCollections.observableArrayList(staffs);
+    }
+
+    public static Staff login(int id, String password) { // this method will either return a Staff or null based on
+                                                         // the input is correct or not, it will be used in the login
+                                                         // progress in the staff menu
+        Staff s = staffMap.get(id);
+        if (s != null && (s.getPassword().equals(password))) {
+            return s;
+        }
+        return null;
     }
 
     public static ObservableList<Staff> staffsProperty() {

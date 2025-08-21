@@ -87,7 +87,7 @@ public class BurgerStoreView {
             try { // An catcher in case the user input a string at idField
                 Staff staff = StaffManagement.login(Integer.parseInt(idField.getText().trim()),
                         passWordField.getText().trim());
-                if (!(staff == null)) {// Shoule we use get here????????
+                if (!(staff == null)) {
                     if (staff.getManagerPermission()) { // Check if the staff is manager to decide which menu we open
                         createManagerMenu(staff);
                         stage.close();
