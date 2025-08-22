@@ -241,7 +241,7 @@ public class BurgerStoreView {
         TableColumn<Staff, String> phoneNumCol = new TableColumn<>("Phone Number");
         TableColumn<Staff, Level> levelCol = new TableColumn<>("Acess Level"); //Another enum if thats fine
 
-        idCol.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
+        idCol.setCellValueFactory(cellData -> cellData.getValue().staffIDProperty().asObject());
         nameCol.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         phoneNumCol.setCellValueFactory(cellData -> cellData.getValue().phoneNumProperty());
         levelCol.setCellFactory(cellData -> cellData.getValue().levelProperty());
