@@ -10,7 +10,66 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class BurgerStoreModel {
-    //Nothing here
+    private ObservableList<Burger> burgers;
+    private ObservableList<Staff> staffs;
+
+    BurgerStoreModel() {
+        burgers = FXCollections.observableArrayList();
+        staffs = FXCollections.observableArrayList();
+    }
+
+    public ObservableList<Burger> burgersProperty() {
+        return this.burgers;
+    }
+
+    public ObservableList<Staff> staffsProperty() {
+        return this.staffs;
+    }
+
+    public void initRecipe(List<Burger> burger) { // initialized the burgers with a list
+        this.burgers = FXCollections.observableArrayList(burger);
+    }
+
+    public void addRecipe(Burger b) {
+        burgers.add(b);
+    }
+
+    public void removeRecipe(int index) {
+        burgers.remove(index);
+        reassignID();
+    }
+
+    private void reassignID() { //needs to reassign the id after deleting a burger to make sure everthing is in order
+        int id = 0;
+        for (Burger b : burgers) {
+            b.setBurgerID(++id);
+        }
+    }
+
+    public void initStaff(List<Staff> staff) { // initialized the staffs with a list
+        this.staffs = FXCollections.observableArrayList(staff);
+    }
+
+    public Staff login(int id, String password) {
+        for (Staff s : staffs) {
+            if ((s.getStaffID() == id) && (s.getPassword().equals(password))) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    public void addStaff(Staff s) {
+        staffs.add(s);
+    }
+
+    public void updateStaff(Staff s, int index) {
+        staffs.set(index, s);
+    }
+
+    public void removeStaff(int index) { //staff don't need to reassign the id cuz they need to use it for login
+        staffs.remove(index);
+    }
 }
 
 abstract class Burger { // An abstract class, Burger class should not be
@@ -29,6 +88,7 @@ abstract class Burger { // An abstract class, Burger class should not be
         this.meats = FXCollections.observableArrayList(meats);
         this.vegetables = FXCollections.observableArrayList(vegetables);
         this.burgerID = new SimpleIntegerProperty(nextID);
+        this.basePrice = new SimpleDoubleProperty(0.0);
         nextID++;
     }
 
@@ -50,6 +110,11 @@ abstract class Burger { // An abstract class, Burger class should not be
 
     public SimpleIntegerProperty burgerIDProperty() {
         return burgerID;
+    }
+
+    public SimpleStringProperty ingredientProperty() {
+        SimpleStringProperty ingredient = new SimpleStringProperty(this.toString());
+        return ingredient;
     }
 
     public void setSauces(List<Sauce> sauces) {
@@ -178,44 +243,6 @@ class SeasameBurger extends Burger {
     }
 }
 
-class Recipe {
-    private static Map<Integer, Burger> burgerMap = new HashMap<>(); // Set to static for global sharing
-    private static ObservableList<Burger> burgerList; // Used map and observableList together, map for searching faster
-                                                      // by using key, observableList for TableView UI
-
-    public static void initRecipe(List<Burger> burger) { // initialized the burger map with a list
-        for (Burger b : burger) {
-            burgerMap.put(b.getBurgerID(), b);
-        }
-        burgerList = FXCollections.observableArrayList(burger);
-    }
-
-    public static ObservableList<Burger> burgersProperty() {
-        return burgerList;
-    }
-
-    public static Map<Integer, Burger> getBurgerMap() {
-        return burgerMap;
-    }
-
-    public static void delRecipe(int id) {
-        Burger b = burgerMap.remove(id);
-        burgerList.remove(b);
-        reassignID();
-    }
-
-    private static void reassignID() { // After we delete some recipe, some ID will be missing, so we need to re-assign
-                                       // the ID in order
-        int id = 0;
-        Map<Integer, Burger> newMap = new HashMap<>();
-        for (Burger b : burgerMap.values()) {
-            b.setBurgerID(id++);
-            newMap.put(id, b);
-        }
-        burgerMap = newMap;
-    }
-}
-
 class Combo {
     private SimpleObjectProperty<Burger> burger;
     private SimpleObjectProperty<Side> side;
@@ -254,12 +281,14 @@ class Staff {
     private SimpleStringProperty name;
     private static int nextID = 1;
     private SimpleIntegerProperty staffID;
+    protected SimpleStringProperty permission;
 
     public Staff(String password, String phoneNum, String name) {
         this.password = new SimpleStringProperty(password);
         this.phoneNum = new SimpleStringProperty(phoneNum);
         this.name = new SimpleStringProperty(name);
         this.staffID = new SimpleIntegerProperty(nextID);
+        this.permission = new SimpleStringProperty("Staff");
         nextID++;
     }
 
@@ -279,6 +308,10 @@ class Staff {
         return staffID;
     }
 
+    public SimpleStringProperty permissionProperty() {
+        return permission;
+    }
+
     public void setPassword(String password) {
         this.password.set(password);
     }
@@ -289,6 +322,10 @@ class Staff {
 
     public void setName(String name) {
         this.name.set(name);
+    }
+
+    public void setPermission(String Permission) {
+        this.permission.set(Permission);
     }
 
     public String getPassword() {
@@ -307,16 +344,8 @@ class Staff {
         return staffID.get();
     }
 
-    public boolean getManagerPermission() { // using the return type to finds out if the staff is a manager
-        return false;
-    }
-
-    @Override
-    public String toString() {
-        if (getManagerPermission()) {
-            return "Manager Name: " + getName() + ", Phone Number: " + getPhoneNum();
-        }
-        return "Staff Name: " + getName() + ", Phone Number: " + getPhoneNum();
+    public String getPermission() {
+        return permission.get();
     }
 }
 
@@ -324,47 +353,7 @@ class Manager extends Staff {
 
     public Manager(String password, String phoneNum, String name) {
         super(password, phoneNum, name);
-    }
-
-    public boolean getManagerPermission() {
-        return true;
-    }
-}
-
-class StaffManagement {
-
-    private static Map<Integer, Staff> staffMap = new HashMap<>(); // Set to static for global sharing
-    private static ObservableList<Staff> staffList; // Used map and observableList together, map for searching faster
-                                                    // by using key, observableList for TableView UI
-
-    public static void initStaff(List<Staff> staffs) { // initialized the staff map with a list
-        for (Staff s : staffs) {
-            staffMap.put(s.getStaffID(), s);
-        }
-        staffList = FXCollections.observableArrayList(staffs);
-    }
-
-    public static Staff login(int id, String password) { // this method will either return a Staff or null based on
-                                                         // the input is correct or not, it will be used in the login
-                                                         // progress in the staff menu
-        Staff s = staffMap.get(id);
-        if (s != null && (s.getPassword().equals(password))) {
-            return s;
-        }
-        return null;
-    }
-
-    public static ObservableList<Staff> staffsProperty() {
-        return staffList;
-    }
-
-    public static Map<Integer, Staff> getStaffMap() {
-        return staffMap;
-    }
-
-    public static void fireStaff(int id) {
-        Staff s = staffMap.remove(id);
-        staffList.remove(s);
+        super.permission = new SimpleStringProperty("Manager");
     }
 }
 
