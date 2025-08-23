@@ -25,11 +25,13 @@ public class BurgerStore extends Application {
 
         List<Sauce> sauces = new ArrayList<>(Arrays.asList(Sauce.MAYO));
         List<Meat> meats = new ArrayList<>();
+        List<Meat> meats2 = new ArrayList<>(Arrays.asList(Meat.BACON, Meat.BACON, Meat.BACON, Meat.BACON, Meat.BACON));
         List<Vegetable> veggues = new ArrayList<>(Arrays.asList(Vegetable.GREEN_PEPPERS, Vegetable.GRILLED_MUSHROOMS, Vegetable.GRILLED_ONIONS));
-        WhiteBunBurger b = new WhiteBunBurger("Default Burger", sauces, meats, veggues);
-        WhiteBunBurger b2 = new WhiteBunBurger("Default Burger2", sauces, meats, veggues);
-        WhiteBunBurger b3 = new WhiteBunBurger("Default Burger3", sauces, meats, veggues);
-        List<Burger> burgers = new ArrayList<>(Arrays.asList(b, b2, b3));
+        WhiteBunBurger b = new WhiteBunBurger("cDefault Burger", sauces, meats, veggues);
+        WhiteBunBurger b2 = new WhiteBunBurger("bDefault Burger2", sauces, meats, veggues);
+        WhiteBunBurger b3 = new WhiteBunBurger("aDefault Burger3", sauces, meats, veggues);
+        WhiteBunBurger b4 = new WhiteBunBurger("afDefault Burger4", sauces, meats2, veggues);
+        List<Burger> burgers = new ArrayList<>(Arrays.asList(b, b2, b3, b4));
 
         model.initRecipe(burgers);
 
@@ -39,7 +41,7 @@ public class BurgerStore extends Application {
         BurgerStoreController controller = new BurgerStoreController(model, view);
         view.setController(controller);
 
-        Scene scene = new Scene(view.asParent(), 300, 300);
+        Scene scene = new Scene(view.asParent(), 900, 700);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

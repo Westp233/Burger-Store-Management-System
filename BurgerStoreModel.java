@@ -1,6 +1,4 @@
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -74,12 +72,12 @@ public class BurgerStoreModel {
 
 abstract class Burger { // An abstract class, Burger class should not be
                         // instantiated
-    private static int nextID = 1;
+    public static int nextID = 1;
     private ObservableList<Sauce> sauces;
     private ObservableList<Meat> meats;
     private ObservableList<Vegetable> vegetables;
     private SimpleIntegerProperty burgerID;
-    private final SimpleStringProperty name;
+    private SimpleStringProperty name;
     protected SimpleDoubleProperty basePrice;
 
     public Burger(String name, List<Sauce> sauces, List<Meat> meats, List<Vegetable> vegetables) {
@@ -133,6 +131,10 @@ abstract class Burger { // An abstract class, Burger class should not be
         this.burgerID.set(burgerID);
     }
 
+    public void setName(String name) {
+        this.name.set(name);
+    }
+
     public List<Sauce> getSauces() {
         return sauces;
     }
@@ -168,6 +170,11 @@ abstract class Burger { // An abstract class, Burger class should not be
         for (Vegetable v : vegetables) {
             price += v.getPrice();
         }
+        return price;
+    }
+
+    public SimpleDoubleProperty priceProperty() {
+        SimpleDoubleProperty price = new SimpleDoubleProperty(countPrice());
         return price;
     }
 

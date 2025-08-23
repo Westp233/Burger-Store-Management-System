@@ -1,6 +1,5 @@
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swt.FXCanvas;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -75,8 +75,507 @@ public class BurgerStoreView {
         view.setAlignment(Pos.CENTER);
     }
 
-    private void createOrderMenu() {
+    private void createOrderMenu() { // this is the menu for the customer
+        view.getChildren().clear();
 
+        Label message = new Label("Please Choose an Option");
+
+        Label breakLabel = new Label(" ");
+
+        Button orderBtn = new Button("Ordering from Current Menu");
+        orderBtn.setOnAction(event -> createOrderPage());
+
+        Button customizeBtn = new Button("Customize Your Own Burger Recipe");
+        customizeBtn.setOnAction(event -> createCustomizePage());
+
+        Button returnBtn = new Button("Return to the Home Page");
+        returnBtn.setOnAction(event -> createAndLayoutControls());
+
+        view.getChildren().addAll(message, breakLabel, orderBtn, customizeBtn, returnBtn);
+        view.setAlignment(Pos.CENTER);
+    }
+
+    private void createOrderPage() { // This is the window for ordering from the menu
+        view.getChildren().clear();
+
+        TableView<Burger> table = new TableView<>();
+
+        TableColumn<Burger, String> nameCol = new TableColumn<>("Name");
+        TableColumn<Burger, String> ingredientCol = new TableColumn<>("Ingredients");
+        TableColumn<Burger, Integer> idCol = new TableColumn<>("ID");
+        TableColumn<Burger, Double> priceCol = new TableColumn<>("Price");
+
+        nameCol.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        ingredientCol.setCellValueFactory(cellData -> cellData.getValue().ingredientProperty());
+        idCol.setCellValueFactory(cellData -> cellData.getValue().burgerIDProperty().asObject());
+        priceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
+
+        table.getColumns().addAll(idCol, nameCol, ingredientCol, priceCol);
+        table.setItems(model.burgersProperty());
+
+        Button returnBtn = new Button("Return to Previous Step");
+        returnBtn.setOnAction(event -> createOrderMenu());
+
+        Button sortByIDBtn = new Button("Sort by ID");
+        sortByIDBtn.setOnAction(event -> controller.sortID());
+
+        Button sortByNameBtn = new Button("Sort by Name");
+        sortByNameBtn.setOnAction(event -> controller.sortName());
+
+        Button sortByPriceA = new Button("Sort by Price (Ascending)");
+        sortByPriceA.setOnAction(event -> controller.sortPrice());
+
+        Button sortByPriceD = new Button("Sort by Price (Descending)");
+        sortByPriceD.setOnAction(event -> controller.sortPriceR());
+
+        Button makeComboBtn = new Button("Make it a Combo");
+        makeComboBtn.setOnAction(event -> {
+            int index = table.getSelectionModel().getSelectedIndex();
+            if (index != -1) {
+                createMakeComboPage(table.getSelectionModel().getSelectedItem());
+            }
+        });
+
+        Button proceedBtn = new Button("Proceed with Burger Only");
+        proceedBtn.setOnAction(event -> {
+            int index = table.getSelectionModel().getSelectedIndex();
+            if (index != -1) {
+                createPaymentPage(table.getSelectionModel().getSelectedItem());
+            }
+        });
+
+        HBox sortBtnRow = new HBox(5, sortByIDBtn, sortByNameBtn, sortByPriceA, sortByPriceD);
+
+        HBox functionBtnRow = new HBox(5, returnBtn, makeComboBtn, proceedBtn);
+
+        view.getChildren().addAll(table, sortBtnRow, functionBtnRow);
+        view.setAlignment(Pos.CENTER);
+    }
+
+    private void createCustomizePage() { // This is the window for customize the burger
+        view.getChildren().clear();
+
+        Label sauceLabel = new Label("Sauces: ");
+
+        TextField mayoField = new TextField("0");
+        HBox mayoRow = new HBox(5, new Label("Mayo: "), mayoField);
+
+        TextField kecthupField = new TextField("0");
+        HBox ketchupRow = new HBox(5, new Label("Ketchup: "), kecthupField);
+
+        TextField mustarField = new TextField("0");
+        HBox mustardRow = new HBox(5, new Label("Mustard: "), mustarField);
+
+        TextField relishField = new TextField("0");
+        HBox relishRow = new HBox(5, new Label("Relish: "), relishField);
+
+        TextField bbqField = new TextField("0");
+        HBox bbqRow = new HBox(5, new Label("BBQ Sauce: "), bbqField);
+
+        TextField steakField = new TextField("0");
+        HBox steakRow = new HBox(5, new Label("Steak Sauce: "), steakField);
+
+        TextField hotField = new TextField("0");
+        HBox hotRow = new HBox(5, new Label("Hot Sauce: "), hotField);
+
+        VBox sauce = new VBox(5, sauceLabel, mayoRow, ketchupRow, mustardRow, relishRow, bbqRow, steakRow, hotRow);
+
+        Label vegetableLabel = new Label("Vegetables: ");
+
+        TextField lettuceField = new TextField("0");
+        HBox lettuceRow = new HBox(5, new Label("Lettuce: "), lettuceField);
+
+        TextField tomatoField = new TextField("0");
+        HBox tomatoRow = new HBox(5, new Label("Tomato: "), tomatoField);
+
+        TextField onionField = new TextField("0");
+        HBox onionRow = new HBox(5, new Label("Onions: "), onionField);
+
+        TextField grilledOnionField = new TextField("0");
+        HBox grilledOnionRow = new HBox(5, new Label("Grilled Onions: "), grilledOnionField);
+
+        TextField grilledMushroomField = new TextField("0");
+        HBox grilledMushroomRow = new HBox(5, new Label("Grilled Mushrooms: "), grilledMushroomField);
+
+        TextField jalapenoField = new TextField("0");
+        HBox jalapenoRow = new HBox(5, new Label("Jalapeno: "), jalapenoField);
+
+        TextField greenPepperField = new TextField("0");
+        HBox greenPepperRow = new HBox(5, new Label("Green Peppers: "), greenPepperField);
+
+        TextField pickleField = new TextField("0");
+        HBox pickleRow = new HBox(5, new Label("Pickles: "), pickleField);
+
+        VBox vegetable = new VBox(5, vegetableLabel, lettuceRow, tomatoRow, onionRow, grilledOnionRow,
+                grilledMushroomRow,
+                jalapenoRow, greenPepperRow, pickleRow);
+
+        Label meatLabel = new Label("Meats: ");
+
+        TextField fishField = new TextField("0");
+        HBox fishRow = new HBox(5, new Label("Fish: "), fishField);
+
+        TextField chickenField = new TextField("0");
+        HBox chickenRow = new HBox(5, new Label("Chicken: "), chickenField);
+
+        TextField beefField = new TextField("0");
+        HBox beefRow = new HBox(5, new Label("Beef: "), beefField);
+
+        TextField baconField = new TextField("0");
+        HBox baconRow = new HBox(5, new Label("Bacon: "), baconField);
+
+        VBox meat = new VBox(5, meatLabel, fishRow, chickenRow, beefRow, baconRow);
+
+        HBox ingredientRow = new HBox(10, sauce, meat, vegetable);
+        ingredientRow.setAlignment(Pos.CENTER);
+
+        ToggleGroup toggleGroup = new ToggleGroup();
+
+        RadioButton whiteBtn = new RadioButton("White Bun");
+        whiteBtn.setToggleGroup(toggleGroup);
+
+        RadioButton seasameBtn = new RadioButton("Seasame Bun");
+        seasameBtn.setToggleGroup(toggleGroup);
+
+        RadioButton glutenFreeBtn = new RadioButton("Gulten Free Bun");
+        glutenFreeBtn.setToggleGroup(toggleGroup);
+
+        Button returnBtn = new Button("Return to Previous Step");
+        returnBtn.setOnAction(event -> createOrderMenu());
+
+        Button confirmButton = new Button("Confirm Recipe");
+        confirmButton.setOnAction(event -> {
+            String bun = "";
+            if (whiteBtn.isSelected()) {
+                bun = "White Bun";
+            } else if (seasameBtn.isSelected()) {
+                bun = "Seasame Bun";
+            } else {
+                bun = "Gulten Free Bun";
+            }
+
+            String fish = fishField.getText();
+            String chicken = chickenField.getText();
+            String beef = beefField.getText();
+            String bacon = baconField.getText();
+
+            String lettuce = lettuceField.getText();
+            String tomato = tomatoField.getText();
+            String onion = onionField.getText();
+            String grilledOnion = grilledOnionField.getText();
+            String grilledMushroom = grilledMushroomField.getText();
+            String jalapeno = jalapenoField.getText();
+            String greenPepper = greenPepperField.getText();
+            String pickle = pickleField.getText();
+
+            String mayo = mayoField.getText();
+            String ketchup = kecthupField.getText();
+            String mustard = mustarField.getText();
+            String relish = relishField.getText();
+            String bbq = bbqField.getText();
+            String steak = steakField.getText();
+            String hot = hotField.getText();
+
+            controller.createBurger(bun,
+                    fish, chicken, beef, bacon,
+                    lettuce, tomato, onion, grilledOnion, grilledMushroom, jalapeno, greenPepper, pickle,
+                    mayo, ketchup, mustard, relish, bbq, steak, hot);
+        });
+
+        HBox bunRow = new HBox(10, whiteBtn, seasameBtn, glutenFreeBtn);
+        bunRow.setAlignment(Pos.CENTER);
+
+        HBox btnRow = new HBox(10, returnBtn, confirmButton);
+        btnRow.setAlignment(Pos.CENTER);
+
+        view.getChildren().addAll(ingredientRow, bunRow, btnRow);
+    }
+
+    public void createFinalizationPage(Burger b) { // this window is the confirm page for the customize burger
+        view.getChildren().clear();
+
+        Label message = new Label("Your Customize Burger: ");
+
+        Label breakLabel = new Label("");
+
+        Label burgerDetail = new Label(b.toString());
+
+        Button returnBtn = new Button("Return to Previous Step");
+        returnBtn.setOnAction(event -> {
+            controller.removeRecentRecipe();
+            createCustomizePage();
+        });
+
+        Button uploadWithBurgerBtn = new Button("Proceed with Burger Only (Upload this Recipe)");
+        uploadWithBurgerBtn.setOnAction(event -> {
+            createNamingPageForBurger(b);
+        });
+
+        Button uploadWithComboBtn = new Button("Make it a Combo (Upload this Recipe)");
+        uploadWithComboBtn.setOnAction(event -> {
+            createNamingPageForCombo(b);
+
+        });
+
+        Button burgerBtn = new Button("Proceed with Burger Only (Don't upload this Recipe)");
+        burgerBtn.setOnAction(event -> {
+            controller.removeRecentRecipe();
+            createPaymentPage(b);
+        });
+
+        Button comboBtn = new Button("Make it a Combo (Upload this Recipe)");
+        comboBtn.setOnAction(event -> {
+            controller.removeRecentRecipe();
+            createMakeComboPage(b);
+        });
+
+        HBox uploadRow = new HBox(5, uploadWithBurgerBtn, uploadWithComboBtn);
+        uploadRow.setAlignment(Pos.CENTER);
+
+        HBox noUploadRow = new HBox(5, burgerBtn, comboBtn, returnBtn);
+        noUploadRow.setAlignment(Pos.CENTER);
+
+        view.getChildren().addAll(message, breakLabel, burgerDetail, uploadRow, noUploadRow);
+    }
+
+    private void createNamingPageForBurger(Burger b) { // name the recipe and upload it to the menu, then proceed to
+                                                       // payment
+        Stage stage = new Stage();
+        stage.setTitle("Name the Recipe");
+        stage.initOwner(primaryStage);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        TextField nameField = new TextField();
+
+        HBox nameRow = new HBox(5, new Label("Name: "), nameField);
+        nameRow.setAlignment(Pos.CENTER);
+
+        Button submitBtn = new Button("Submit");
+        submitBtn.setOnAction(event -> {
+            controller.setBurgerName(b, nameField.getText());
+            controller.uploadRecipe(b);
+            createPaymentPage(b);
+            stage.close();
+        });
+
+        Button closeBtn = new Button("Close");
+        closeBtn.setOnAction(event -> stage.close());
+
+        HBox btnRow = new HBox(5, submitBtn, closeBtn);
+        btnRow.setAlignment(Pos.CENTER);
+
+        VBox root = new VBox(5, nameRow, btnRow);
+        root.setAlignment(Pos.CENTER);
+
+        Scene namingScene = new Scene(root, 300, 150);
+
+        stage.setScene(namingScene);
+        stage.show();
+
+    }
+
+    private void createNamingPageForCombo(Burger b) { // name the recipe and upload it to the menu, then proceed to make
+                                                      // it a combo
+        Stage stage = new Stage();
+        stage.setTitle("Name the Recipe");
+        stage.initOwner(primaryStage);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        TextField nameField = new TextField();
+
+        HBox nameRow = new HBox(5, new Label("Name: "), nameField);
+        nameRow.setAlignment(Pos.CENTER);
+
+        Button submitBtn = new Button("Submit");
+        submitBtn.setOnAction(event -> {
+            controller.setBurgerName(b, nameField.getText());
+            controller.uploadRecipe(b);
+            createMakeComboPage(b);
+            stage.close();
+        });
+
+        Button closeBtn = new Button("Close");
+        closeBtn.setOnAction(event -> stage.close());
+
+        HBox btnRow = new HBox(5, submitBtn, closeBtn);
+        btnRow.setAlignment(Pos.CENTER);
+
+        VBox root = new VBox(5, nameRow, btnRow);
+        root.setAlignment(Pos.CENTER);
+
+        Scene namingScene = new Scene(root, 300, 150);
+
+        stage.setScene(namingScene);
+        stage.show();
+
+    }
+
+    private void createMakeComboPage(Burger b) { // This page allows the user to select the sides and drinks for their
+                                                 // combo
+        view.getChildren().clear();
+
+        Label sideLabel = new Label("Side: ");
+
+        ToggleGroup sideGroup = new ToggleGroup();
+
+        RadioButton friesBtn = new RadioButton("Fries");
+        friesBtn.setToggleGroup(sideGroup);
+
+        RadioButton onionRingsBtn = new RadioButton("Onion Rings");
+        onionRingsBtn.setToggleGroup(sideGroup);
+
+        RadioButton chickenNuggetsBtn = new RadioButton("Chicken Nuggets");
+        chickenNuggetsBtn.setToggleGroup(sideGroup);
+
+        RadioButton chickenWingsBtn = new RadioButton("Chicken Wings");
+        chickenWingsBtn.setToggleGroup(sideGroup);
+
+        RadioButton saladBtn = new RadioButton("Salad");
+        saladBtn.setToggleGroup(sideGroup);
+
+        VBox sideRow = new VBox(5, sideLabel, friesBtn, onionRingsBtn, chickenNuggetsBtn, chickenWingsBtn, saladBtn);
+
+        Label drinkLabel = new Label("Drink: ");
+
+        ToggleGroup drinkGroup = new ToggleGroup();
+
+        RadioButton cokeBtn = new RadioButton("Coke");
+        cokeBtn.setToggleGroup(drinkGroup);
+
+        RadioButton cokeZeroBtn = new RadioButton("Coke Zero");
+        cokeZeroBtn.setToggleGroup(drinkGroup);
+
+        RadioButton fantaBtn = new RadioButton("Fanta");
+        fantaBtn.setToggleGroup(drinkGroup);
+
+        RadioButton spriteBtn = new RadioButton("Sprite");
+        spriteBtn.setToggleGroup(drinkGroup);
+
+        RadioButton orangeJuiceBtn = new RadioButton("Orange Juice");
+        orangeJuiceBtn.setToggleGroup(drinkGroup);
+
+        RadioButton milkShakeBtn = new RadioButton("Milk Shake");
+        milkShakeBtn.setToggleGroup(drinkGroup);
+
+        Button proceedBtn = new Button("Proceed");
+        proceedBtn.setOnAction(event -> {
+            Side s = null;
+            Drink d = null;
+
+            if (friesBtn.isSelected()) {
+                s = Side.FRIES;
+            } else if (onionRingsBtn.isSelected()) {
+                s = Side.ONION_RINGS;
+            } else if (chickenNuggetsBtn.isSelected()) {
+                s = Side.CHICKEN_NUGGETS;
+            } else if (chickenWingsBtn.isSelected()) {
+                s = Side.CHICKEN_WINGS;
+            } else {
+                s = Side.SALAD;
+            }
+
+            if (cokeBtn.isSelected()) {
+                d = Drink.COKE;
+            } else if (cokeZeroBtn.isSelected()) {
+                d = Drink.COKO_ZERO;
+            } else if (fantaBtn.isSelected()) {
+                d = Drink.FANTA;
+            } else if (spriteBtn.isSelected()) {
+                d = Drink.SPRITE;
+            } else if (orangeJuiceBtn.isSelected()) {
+                d = Drink.ORANGE_JUICE;
+            } else {
+                d = Drink.MILK_SHAKE;
+            }
+
+            controller.createCombo(b, s, d);
+        });
+
+        VBox drinkRow = new VBox(5, drinkLabel, cokeBtn, cokeZeroBtn, fantaBtn, spriteBtn, orangeJuiceBtn,
+                milkShakeBtn);
+
+        HBox selectiveRow = new HBox(10, sideRow, drinkRow);
+        selectiveRow.setAlignment(Pos.CENTER);
+
+        view.getChildren().addAll(selectiveRow, proceedBtn);
+    }
+
+    private void createPaymentPage(Burger b) {  //final payment window if user just select a burger
+        view.getChildren().clear();
+
+        Label burgerMessage = new Label("Your Burger: ");
+
+        Label burgerDetail = new Label(b.toString());
+
+        Label price = new Label("Final Price: $" + b.countPrice());
+
+        Label breakLabel = new Label("");
+
+        Label message = new Label("Please Choose a Payment Method");
+
+        Button cardBtn = new Button("Credit Card");
+        cardBtn.setOnAction(event -> createCardPaymentPage());
+
+        Button frontBtn = new Button("Pay at the Front");
+        frontBtn.setOnAction(event -> createPayAtFrontPage());
+
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setOnAction(event -> createAndLayoutControls());
+
+        view.getChildren().addAll(burgerMessage, burgerDetail, breakLabel, price, breakLabel, message, cardBtn, frontBtn, cancelBtn);
+    }
+
+    public void createPaymentPage(Combo c) {
+        view.getChildren().clear();
+
+        Label burgerMessage = new Label("Your Burger: ");
+
+        Label burgerDetail = new Label(c.getBurger().toString());
+
+        Label comboMessage = new Label("Your Combo's Detail: ");
+
+        Label drinkDetail = new Label("Drink: " + c.getDrink().getName());
+
+        Label sideDetail = new Label("Side: " + c.getSide().getName());
+
+        Label price = new Label("Final Price: $" + c.getPrice());
+
+        Label breakLabel = new Label("");
+
+        Label message = new Label("Please Choose a Payment Method");
+
+        Button cardBtn = new Button("Credit Card");
+        cardBtn.setOnAction(event -> createCardPaymentPage());
+
+        Button frontBtn = new Button("Pay at the Front");
+        frontBtn.setOnAction(event -> createPayAtFrontPage());
+
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setOnAction(event -> createAndLayoutControls());
+
+        view.getChildren().addAll(burgerMessage, burgerDetail, breakLabel, comboMessage, drinkDetail, sideDetail, breakLabel, price, breakLabel, message, cardBtn, frontBtn, cancelBtn);
+    }
+
+    private void createCardPaymentPage() {
+        view.getChildren().clear();
+
+        Label message = new Label("Payment Successful! Enjoy your meal");
+
+        Button endBtn = new Button("End");
+        endBtn.setOnAction(event -> createAndLayoutControls());
+
+        view.getChildren().addAll(message, endBtn);
+    }
+
+    private void createPayAtFrontPage() {
+        view.getChildren().clear();
+
+        Label message = new Label("Please Go to the Front to Finish the Payment");
+
+        Button endBtn = new Button("End");
+        endBtn.setOnAction(event -> createAndLayoutControls());
+
+        view.getChildren().addAll(message, endBtn);
     }
 
     private void createLoginMenu() {// This is the login window for the staff
@@ -132,13 +631,13 @@ public class BurgerStoreView {
         Button manageStaffBtn = new Button("Manage Current Staff");
         manageStaffBtn.setOnAction(event -> createManageStaffPage());
 
-        Button returnHomePg = new Button("Log Out and Return to Homepage");
-        returnHomePg.setOnAction(event -> {
+        Button returnHomeBtn = new Button("Log Out and Return to Homepage");
+        returnHomeBtn.setOnAction(event -> {
             createAndLayoutControls();
         });
 
         view.getChildren().addAll(welcomeMessage, breakLabel, message, modRecipeBtn, modIngredientBtn, manageStaffBtn,
-                returnHomePg);
+                returnHomeBtn);
         view.setAlignment(Pos.CENTER);
     }
 
@@ -174,12 +673,14 @@ public class BurgerStoreView {
         TableColumn<Burger, String> nameCol = new TableColumn<>("Name");
         TableColumn<Burger, String> ingredientCol = new TableColumn<>("Ingredients");
         TableColumn<Burger, Integer> idCol = new TableColumn<>("ID");
+        TableColumn<Burger, Double> priceCol = new TableColumn<>("Price");
 
         nameCol.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         ingredientCol.setCellValueFactory(cellData -> cellData.getValue().ingredientProperty());
         idCol.setCellValueFactory(cellData -> cellData.getValue().burgerIDProperty().asObject());
+        priceCol.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
 
-        table.getColumns().addAll(idCol, nameCol, ingredientCol);
+        table.getColumns().addAll(idCol, nameCol, ingredientCol, priceCol);
         table.setItems(model.burgersProperty());
 
         Button removeBtn = new Button("Remove");
@@ -197,7 +698,7 @@ public class BurgerStoreView {
 
         VBox root = new VBox(5, table, buttonRow);
 
-        Scene modRecipeScene = new Scene(root, 800, 300);
+        Scene modRecipeScene = new Scene(root, 900, 700);
 
         stage.setScene(modRecipeScene);
         stage.show();
@@ -235,7 +736,7 @@ public class BurgerStoreView {
                 closeBtn);
         root.setAlignment(Pos.CENTER);
 
-        Scene modIngredientSelectionScene = new Scene(root, 300, 300);
+        Scene modIngredientSelectionScene = new Scene(root, 900, 700);
 
         stage.setScene(modIngredientSelectionScene);
         stage.show();
@@ -277,7 +778,7 @@ public class BurgerStoreView {
         VBox root = new VBox(5, table, btnRow);
         root.setAlignment(Pos.CENTER);
 
-        Scene modMeatScene = new Scene(root, 300, 300);
+        Scene modMeatScene = new Scene(root, 900, 700);
 
         stage.setScene(modMeatScene);
         stage.show();
@@ -319,7 +820,7 @@ public class BurgerStoreView {
         VBox root = new VBox(5, table, btnRow);
         root.setAlignment(Pos.CENTER);
 
-        Scene modSauceScene = new Scene(root, 300, 300);
+        Scene modSauceScene = new Scene(root, 900, 700);
 
         stage.setScene(modSauceScene);
         stage.show();
@@ -361,7 +862,7 @@ public class BurgerStoreView {
         VBox root = new VBox(5, table, btnRow);
         root.setAlignment(Pos.CENTER);
 
-        Scene modVegetableScene = new Scene(root, 300, 300);
+        Scene modVegetableScene = new Scene(root, 900, 700);
 
         stage.setScene(modVegetableScene);
         stage.show();
@@ -403,7 +904,7 @@ public class BurgerStoreView {
         VBox root = new VBox(5, table, btnRow);
         root.setAlignment(Pos.CENTER);
 
-        Scene modDrinkScene = new Scene(root, 300, 300);
+        Scene modDrinkScene = new Scene(root, 900, 700);
 
         stage.setScene(modDrinkScene);
         stage.show();
@@ -445,7 +946,7 @@ public class BurgerStoreView {
         VBox root = new VBox(5, table, btnRow);
         root.setAlignment(Pos.CENTER);
 
-        Scene modVegetableScene = new Scene(root, 300, 300);
+        Scene modVegetableScene = new Scene(root, 900, 700);
 
         stage.setScene(modVegetableScene);
         stage.show();
@@ -648,13 +1149,13 @@ public class BurgerStoreView {
 
         VBox root = new VBox(5, table, buttonRow);
 
-        Scene modRecipeScene = new Scene(root, 600, 300);
+        Scene modRecipeScene = new Scene(root, 900, 700);
 
         stage.setScene(modRecipeScene);
         stage.show();
     }
 
-    private void createModPersonalInfoPage(Staff s) { //Staff method, only editing personal informtaion
+    private void createModPersonalInfoPage(Staff s) { // Staff method, only editing personal informtaion
         Stage stage = new Stage();
         stage.initOwner(primaryStage);
         stage.setTitle("Personal Information");
@@ -692,7 +1193,7 @@ public class BurgerStoreView {
         VBox root = new VBox(5, nameRow, phonNumRow, passwordRow, confirmationRow, btnRow);
         root.setAlignment(Pos.CENTER);
 
-        Scene editStaffScene = new Scene(root, 400, 300);
+        Scene editStaffScene = new Scene(root, 900, 700);
 
         stage.setScene(editStaffScene);
         stage.show();
@@ -736,13 +1237,13 @@ public class BurgerStoreView {
         VBox root = new VBox(5, nameRow, phonNumRow, passwordRow, confirmationRow, btnRow);
         root.setAlignment(Pos.CENTER);
 
-        Scene addStaffScene = new Scene(root, 400, 300);
+        Scene addStaffScene = new Scene(root, 900, 700);
 
         stage.setScene(addStaffScene);
         stage.show();
     }
 
-    private void createEditStaffPage(Staff s) { //Manager-only method, edit information for a selected staff
+    private void createEditStaffPage(Staff s) { // Manager-only method, edit information for a selected staff
         Stage stage = new Stage();
         stage.initOwner(primaryStage);
         stage.setTitle("Edit Staff");
@@ -770,6 +1271,7 @@ public class BurgerStoreView {
         managerBtn.setToggleGroup(toggleGroup);
         staffBtn.setToggleGroup(toggleGroup);
         HBox statusRow = new HBox(5, new Label("Access Permission: "), managerBtn, staffBtn);
+        statusRow.setAlignment(Pos.CENTER);
 
         if (s.getPermission().equals("Manager")) {
             managerBtn.setSelected(true);
@@ -799,7 +1301,7 @@ public class BurgerStoreView {
         VBox root = new VBox(5, nameRow, phonNumRow, passwordRow, confirmationRow, statusRow, btnRow);
         root.setAlignment(Pos.CENTER);
 
-        Scene addStaffScene = new Scene(root, 400, 300);
+        Scene addStaffScene = new Scene(root, 400, 200);
 
         stage.setScene(addStaffScene);
         stage.show();
@@ -860,9 +1362,9 @@ public class BurgerStoreView {
         VBox root = new VBox(5, errorMessage, closeBtn);
         root.setAlignment(Pos.CENTER);
 
-        Scene priceErrorScene = new Scene(root, 300, 150);
+        Scene passwordErrorScene = new Scene(root, 300, 150);
 
-        stage.setScene(priceErrorScene);
+        stage.setScene(passwordErrorScene);
         stage.show();
     }
 
@@ -880,9 +1382,30 @@ public class BurgerStoreView {
         VBox root = new VBox(5, errorMessage, closeBtn);
         root.setAlignment(Pos.CENTER);
 
-        Scene priceErrorScene = new Scene(root, 300, 150);
+        Scene emptyErrorScene = new Scene(root, 300, 150);
 
-        stage.setScene(priceErrorScene);
+        stage.setScene(emptyErrorScene);
+        stage.show();
+    }
+
+    public void createBurgerErrorPage() { // This is the pop-up window if there's invalid input while customizing the
+                                          // burger
+        Stage stage = new Stage();
+        stage.setTitle("ERROR");
+        stage.initOwner(primaryStage);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        Label errorMessage = new Label("Conirmation Failed, Invalid Input");
+
+        Button closeBtn = new Button("Close");
+        closeBtn.setOnAction(event -> stage.close());
+
+        VBox root = new VBox(5, errorMessage, closeBtn);
+        root.setAlignment(Pos.CENTER);
+
+        Scene burgerErrorScene = new Scene(root, 300, 150);
+
+        stage.setScene(burgerErrorScene);
         stage.show();
     }
 }
