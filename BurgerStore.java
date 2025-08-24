@@ -13,8 +13,8 @@ public class BurgerStore extends Application {
         primaryStage.setTitle("Rim Burger");
         BurgerStoreModel model = new BurgerStoreModel();
         BurgerStoreView view = new BurgerStoreView(model, primaryStage);
-        BurgerStoreController controller = new BurgerStoreController(model, view);
-        view.setController(controller);
+        BurgerStoreController controller = new BurgerStoreController(model, view); //if we want the controller to control the view, the controller also needs to have the view
+        view.setController(controller); // However it will be hard to initialize so I add a setController to pass the controller to the view separately.
 
         Staff admin = new Manager("password", "1234567", "Admin");
         List<Staff> defaultStaffs = new ArrayList<Staff>();
