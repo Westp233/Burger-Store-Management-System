@@ -511,6 +511,8 @@ public class BurgerStoreView {
 
         Label breakLabel = new Label("");
 
+        Label breakLabel2 = new Label("");
+
         Label message = new Label("Please Choose a Payment Method");
 
         Button cardBtn = new Button("Credit Card");
@@ -522,7 +524,7 @@ public class BurgerStoreView {
         Button cancelBtn = new Button("Cancel");
         cancelBtn.setOnAction(event -> createAndLayoutControls());
 
-        view.getChildren().addAll(burgerMessage, burgerDetail, breakLabel, price, breakLabel, message, cardBtn, frontBtn, cancelBtn);
+        view.getChildren().addAll(burgerMessage, burgerDetail, breakLabel, price, breakLabel2, message, cardBtn, frontBtn, cancelBtn);
     }
 
     public void createPaymentPage(Combo c) {
@@ -542,6 +544,10 @@ public class BurgerStoreView {
 
         Label breakLabel = new Label("");
 
+        Label breakLabel2 = new Label("");
+
+        Label breakLabel3 = new Label("");
+
         Label message = new Label("Please Choose a Payment Method");
 
         Button cardBtn = new Button("Credit Card");
@@ -553,7 +559,7 @@ public class BurgerStoreView {
         Button cancelBtn = new Button("Cancel");
         cancelBtn.setOnAction(event -> createAndLayoutControls());
 
-        view.getChildren().addAll(burgerMessage, burgerDetail, breakLabel, comboMessage, drinkDetail, sideDetail, breakLabel, price, breakLabel, message, cardBtn, frontBtn, cancelBtn);
+        view.getChildren().addAll(burgerMessage, burgerDetail, breakLabel, comboMessage, drinkDetail, sideDetail, breakLabel2, price, breakLabel3, message, cardBtn, frontBtn, cancelBtn);
     }
 
     private void createCardPaymentPage() {
