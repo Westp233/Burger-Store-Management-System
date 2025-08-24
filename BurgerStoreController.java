@@ -31,11 +31,12 @@ public class BurgerStoreController {
         }
     }
 
-    public void removeRecipe(int index) {
+    public void removeRecipe(int index) { // Remove the burger with provided burger
         model.removeRecipe(index);
     }
 
-    public void setPrice(Meat meat, String price) {
+    public void setPrice(Meat meat, String price) {// A controller method interact with the view directly if there's
+                                                   // invalid input
         try { // An catcher in case the user input a string at TextField
             int newPrice = Integer.parseInt(price.trim());
             if (newPrice < 0) {
@@ -50,7 +51,8 @@ public class BurgerStoreController {
         }
     }
 
-    public void setPrice(Sauce sauce, String price) {
+    public void setPrice(Sauce sauce, String price) {// A controller method interact with the view directly if there's
+                                                     // invalid input
         try { // An catcher in case the user input a string at TextField
             int newPrice = Integer.parseInt(price.trim());
             if (newPrice < 0) {
@@ -65,7 +67,8 @@ public class BurgerStoreController {
         }
     }
 
-    public void setPrice(Vegetable vegetable, String price) {
+    public void setPrice(Vegetable vegetable, String price) { // A controller method interact with the view directly if
+                                                              // there's invalid input
         try { // An catcher in case the user input a string at TextField
             int newPrice = Integer.parseInt(price.trim());
             if (newPrice < 0) {
@@ -80,7 +83,8 @@ public class BurgerStoreController {
         }
     }
 
-    public void setPrice(Drink drink, String price) {
+    public void setPrice(Drink drink, String price) { // A controller method interact with the view directly if there's
+                                                      // invalid input
         try { // An catcher in case the user input a string at TextField
             int newPrice = Integer.parseInt(price.trim());
             if (newPrice < 0) {
@@ -95,7 +99,8 @@ public class BurgerStoreController {
         }
     }
 
-    public void setPrice(Side side, String price) {
+    public void setPrice(Side side, String price) { // A controller method interact with the view directly if there's
+                                                    // invalid input
         try { // An catcher in case the user input a string at TextField
             int newPrice = Integer.parseInt(price.trim());
             if (newPrice < 0) {
@@ -110,11 +115,19 @@ public class BurgerStoreController {
         }
     }
 
-    public void removeStaff(int index) {
+    public void removeStaff(int index) { // remove a staff from the observable list with given index
         model.removeStaff(index);
     }
 
-    public void createStaff(String name, String phoneNum, String password, String confirmation) {
+    public void createStaff(String name, String phoneNum, String password, String confirmation) { // create a staff
+                                                                                                  // Object and add it
+                                                                                                  // to the list, make
+                                                                                                  // view shows error
+                                                                                                  // page if user leave
+                                                                                                  // the information
+                                                                                                  // part empty or
+                                                                                                  // password is not
+                                                                                                  // smae
         name = name.trim();
         phoneNum = phoneNum.trim();
         password = password.trim();
@@ -129,7 +142,9 @@ public class BurgerStoreController {
         }
     }
 
-    public void editStaff(Staff s, String name, String phoneNum, String password, String confirmation,
+    public void editStaff(Staff s, String name, String phoneNum, String password, String confirmation, // edit a staff's
+                                                                                                       // personal
+                                                                                                       // information
             String permission) {
         name = name.trim();
         phoneNum = phoneNum.trim();
@@ -147,7 +162,7 @@ public class BurgerStoreController {
         }
     }
 
-    public void sortID() {
+    public void sortID() { // some corting method for the burgers list
         Comparator<Burger> compareID = Comparator.comparing(Burger::getBurgerID);
         FXCollections.sort(model.burgersProperty(), compareID);
     }
@@ -167,7 +182,8 @@ public class BurgerStoreController {
         FXCollections.sort(model.burgersProperty(), comparePriceD);
     }
 
-    public void createBurger(String bun,
+    public void createBurger(String bun, // method for contomize burger, creating a burger with user's input, if user
+                                         // input a string, show an error page
             String fish, String chicken, String beef, String bacon,
             String lettuce, String tomato, String onion, String grilledOnion, String grilledMushroom,
             String jalapeno, String greenPepper, String pickle,
@@ -274,19 +290,21 @@ public class BurgerStoreController {
         }
     }
 
-    public void removeRecentRecipe() {
+    public void removeRecentRecipe() { // if a customer don't want to upload his recipe, since the nextID always
+                                       // increment when new object is created, we need to -1
         Burger.nextID--;
     }
 
-    public void uploadRecipe(Burger b) {
+    public void uploadRecipe(Burger b) { // add a burger to the recipe
         model.addRecipe(b);
     }
 
-    public void setBurgerName(Burger b, String s) {
+    public void setBurgerName(Burger b, String s) { // set a name to the given burger
         b.setName(s);
     }
 
-    public void createCombo(Burger b, Side s, Drink d) {
+    public void createCombo(Burger b, Side s, Drink d) { // create a combo and directly interact with view to create a
+                                                         // new page
         Combo c = new Combo(b, s, d);
         view.createPaymentPage(c);
     }

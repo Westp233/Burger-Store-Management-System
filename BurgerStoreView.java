@@ -525,7 +525,7 @@ public class BurgerStoreView {
         view.getChildren().addAll(burgerMessage, burgerDetail, breakLabel, price, breakLabel2, message, cardBtn, frontBtn, cancelBtn);
     }
 
-    public void createPaymentPage(Combo c) {
+    public void createPaymentPage(Combo c) { //final payment window if user proceed with a combo
         view.getChildren().clear();
 
         Label burgerMessage = new Label("Your Burger: ");
@@ -560,7 +560,7 @@ public class BurgerStoreView {
         view.getChildren().addAll(burgerMessage, burgerDetail, breakLabel, comboMessage, drinkDetail, sideDetail, breakLabel2, price, breakLabel3, message, cardBtn, frontBtn, cancelBtn);
     }
 
-    private void createCardPaymentPage() {
+    private void createCardPaymentPage() {  //Payment Page
         view.getChildren().clear();
 
         Label message = new Label("Payment Successful! Enjoy your meal");
@@ -571,7 +571,7 @@ public class BurgerStoreView {
         view.getChildren().addAll(message, endBtn);
     }
 
-    private void createPayAtFrontPage() {
+    private void createPayAtFrontPage() {   //Payment Page
         view.getChildren().clear();
 
         Label message = new Label("Please Go to the Front to Finish the Payment");
